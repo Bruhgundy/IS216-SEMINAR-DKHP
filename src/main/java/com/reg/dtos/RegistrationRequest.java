@@ -1,0 +1,12 @@
+package com.reg.dtos;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
+public class RegistrationRequest {
+    @NotNull
+    public Long studentId;
+    @NotNull
+    public Long courseId;
+}

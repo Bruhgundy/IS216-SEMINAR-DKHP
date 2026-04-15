@@ -1,6 +1,6 @@
 @echo off
 echo ============================================
-echo   Course Registration System - Docker Run
+echo   		DKHP - Docker Run
 echo ============================================
 echo.
 
