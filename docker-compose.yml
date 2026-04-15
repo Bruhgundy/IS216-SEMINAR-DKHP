@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle-xe
+    environment:
+      ORACLE_PASSWORD: BRUH
+      ORACLE_DATABASE: XEPDB1
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./src/main/resources/db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 30
+
+  app:
+    build: .
+    container_name: course-registration
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/XEPDB1
+      SPRING_DATASOURCE_USERNAME: COURSE_REG
+      SPRING_DATASOURCE_PASSWORD: BRUH
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  oracle-data:
