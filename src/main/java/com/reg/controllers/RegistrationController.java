@@ -25,30 +25,6 @@ public class RegistrationController {
                 registrationService.register(req));
     }
 
-    @PostMapping("/pessimistic")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<RegistrationResponse> registerPessimistic(
-            @Valid @RequestBody RegistrationRequest req) {
-        return ApiResponse.ok("Registered (pessimistic).",
-                registrationService.registerPessimistic(req));
-    }
-
-    @PostMapping("/atomic")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<RegistrationResponse> registerAtomic(
-            @Valid @RequestBody RegistrationRequest req) {
-        return ApiResponse.ok("Registered (atomic).",
-                registrationService.registerAtomic(req));
-    }
-
-    @PostMapping("/serializable")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<RegistrationResponse> registerSerializable(
-            @Valid @RequestBody RegistrationRequest req) {
-        return ApiResponse.ok("Registered (serializable).",
-                registrationService.registerSerializable(req));
-    }
-
     @GetMapping("/student/{studentId}")
     public ApiResponse<List<RegistrationResponse>> getForStudent(
             @PathVariable Long studentId) {

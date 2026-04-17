@@ -8,7 +8,6 @@ import com.reg.repos.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
@@ -39,54 +38,7 @@ public class RegistrationService {
         return save(student, course);
     }
 
-    @Transactional
-    public RegistrationResponse registerPessimistic(RegistrationRequest req) {
-        Student student = findStudent(req.getStudentId());
-        Course  course  = courseService.findByIdForUpdate(req.getCourseId());
-
-        guardDuplicate(student.getId(), course.getId());
-        guardScheduleConflict(student, course);
-
-        if (!course.hasSeats())
-            throw new NoSeatsAvailableException(course.getId(), course.getName());
-
-        course.claimSeat();
-        courseRepository.save(course);
-
-        return save(student, course);
-    }
-
-    @Transactional
-    public RegistrationResponse registerAtomic(RegistrationRequest req) {
-        Student student = findStudent(req.getStudentId());
-        Course course = courseService.findOrThrow(req.getCourseId());
-
-        guardDuplicate(student.getId(), course.getId());
-        guardScheduleConflict(student, course);
-
-        int updated = courseRepository.decrementSeatAtomic(course.getId());
-        if (updated == 0)
-            throw new NoSeatsAvailableException(course.getId(), course.getName());
-
-        return save(student, course);
-    }
-
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public RegistrationResponse registerSerializable(RegistrationRequest req) {
-        Student student = findStudent(req.getStudentId());
-        Course  course  = courseService.findOrThrow(req.getCourseId());
-
-        guardDuplicate(student.getId(), course.getId());
-        guardScheduleConflict(student, course);
-
-        if (!course.hasSeats())
-            throw new NoSeatsAvailableException(course.getId(), course.getName());
-
-        course.claimSeat();
-        courseRepository.save(course);
-
-        return save(student, course);
-    }
+    
 
     @Transactional(readOnly = true)
     public List<RegistrationResponse> getRegistrationsForStudent(Long studentId) {

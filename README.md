@@ -4,12 +4,14 @@
 ```
 1. run run.bat
 2. Wait
-3. http://localhost:8080 on your browser
+3. http://localhost:8080 on browser
 ```
 
 ### Linux/Mac
+```
 bash
 docker-compose up -d
+```
 
 ---
 
